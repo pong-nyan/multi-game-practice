@@ -24,8 +24,8 @@ export class GameService {
         break;
     }
   }
-  addBall() {
-    this.balls.push(new Ball());
+  addBall(socketId: string) {
+    this.balls.push(new Ball(socketId));
   }
 
   removeBall() {

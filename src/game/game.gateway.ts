@@ -21,12 +21,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('game') 
   handleGame(@MessageBody() keyEvent: KeyEvent) {
-
     this.gameService.moveBall(keyEvent.keyCode);
   }
 
-  async handleConnection() {
-    this.gameService.addBall();
+  async handleConnection(client: Socket) {
+    this.gameService.addBall(client.id);
     this.server.emit('balls', this.gameService.balls);
     console.log('Connection', this.gameService.balls);
   }

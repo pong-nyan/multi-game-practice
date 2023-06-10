@@ -28,7 +28,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection() {
     this.gameService.addBall();
     this.server.emit('balls', this.gameService.balls);
-    console.log(this.gameService.balls);
     console.log('Connection', this.gameService.balls);
   }
 

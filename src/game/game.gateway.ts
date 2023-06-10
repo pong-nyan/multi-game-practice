@@ -6,30 +6,31 @@ import {
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
+import { GameService } from './game.service';
 
 @WebSocketGateway({
   cors: { origin: '*' },
 })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private readonly gameService: GameService) {}
+
   @WebSocketServer()
   server: Server;
-  private readonly gameService: GameService;
 
-
-  @SubscribeMessage('game') {
-	  this.gameService.handleGame();
-  }
+  // @SubscribeMessage('game') {
+  //  this.gameService.handleGame();
+  // }
 
   async handleConnection() {
-    this.gameService.balls.append({new Date()}); //사용자 증가
-    this.server.emit('balls', this.balls);
-    console.log(this.balls);
-    console.log("Connection", this.balls);
+    this.gameService.addBall();
+    this.server.emit('balls', this.gameService.balls);
+    console.log(this.gameService.balls);
+    console.log('Connection', this.gameService.balls);
   }
 
   async handleDisconnect() {
-	this.gameService.balls.splice(this.balls.indexOf(socket_id), 1);
-	this.server.emit('balls', this.balls);
-    console.log("Disconnection", this.balls);
+    this.gameService.removeBall();
+    this.server.emit('balls', this.gameService.balls);
+    console.log('Disconnection', this.gameService.balls);
   }
 }

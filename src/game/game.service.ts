@@ -3,7 +3,7 @@ import { Ball } from './objects/game.objects';
 
 @Injectable()
 export class GameService {
-  balls = [];
+  balls: Ball[] = [];
   moveBall(keyCode: string) {
     //TODO : Move My Ball
     console.log(keyCode);

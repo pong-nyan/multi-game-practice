@@ -4,6 +4,6 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await app.listen(4242);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  console.info(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();

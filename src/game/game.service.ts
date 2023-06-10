@@ -6,7 +6,6 @@ export class GameService {
   balls: Ball[] = [];
   moveBall(keyCode: string) {
     //TODO : Move My Ball
-    console.log(keyCode);
     switch (keyCode) {
       case 'ArrowUp':
         this.balls[0].y -= 5;

@@ -4,9 +4,11 @@ import {
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  MessageBody,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { GameService } from './game.service';
+import { KeyEvent } from './objects/game.interface';
 
 @WebSocketGateway({
   cors: { origin: '*' },
@@ -17,9 +19,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  // @SubscribeMessage('game') {
-  //  this.gameService.handleGame();
-  // }
+  @SubscribeMessage('game') 
+  handleGame(@MessageBody() keyEvent: KeyEvent) {
+
+    this.gameService.moveBall(keyEvent.keyCode);
+  }
 
   async handleConnection() {
     this.gameService.addBall();

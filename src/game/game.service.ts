@@ -6,6 +6,7 @@ export class GameService {
   balls: Ball[] = [];
   moveBall(keyCode: string, socketId: string) {
     const myBall = this.getMyBall(socketId);
+    const prev: { x: number, y: number } = { x: myBall.x, y: myBall.y };
     switch (keyCode) {
       case 'ArrowUp':
         myBall.y -= 5;
@@ -22,6 +23,10 @@ export class GameService {
       default:
         break;
     }
+    if (this.isCollision(myBall)) {
+      myBall.x = prev.x;
+      myBall.y = prev.y;
+    }
   }
   addBall(socketId: string) {
     this.balls.push(new Ball(socketId));
@@ -32,6 +37,16 @@ export class GameService {
   }
   private getMyBall(socketId: string) {
     return this.balls.find((ball) => ball.id === socketId);
+  }
+  // TODO: collision detection function
+  isCollision(ball: Ball) {
+    const collision = this.balls.find(
+      (b) =>
+        b.id !== ball.id &&
+        Math.sqrt(Math.pow(b.x - ball.x, 2) + Math.pow(b.y - ball.y, 2)) <
+        b.radius + ball.radius,
+    );
+    return !!collision;
   }
 
 }

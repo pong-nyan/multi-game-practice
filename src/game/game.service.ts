@@ -38,8 +38,7 @@ export class GameService {
   private getMyBall(socketId: string) {
     return this.balls.find((ball) => ball.id === socketId);
   }
-  // TODO: collision detection function
-  isCollision(ball: Ball) {
+  private isCollision(ball: Ball) {
     const collision = this.balls.find(
       (b) =>
         b.id !== ball.id &&

@@ -4,20 +4,20 @@ import { Ball } from './objects/game.objects';
 @Injectable()
 export class GameService {
   balls: Ball[] = [];
-  moveBall(keyCode: string) {
-    //TODO : Move My Ball
+  moveBall(keyCode: string, socketId: string) {
+    const myBall = this.getMyBall(socketId);
     switch (keyCode) {
       case 'ArrowUp':
-        this.balls[0].y -= 5;
+        myBall.y -= 5;
         break;
       case 'ArrowDown':
-        this.balls[0].y += 5;
+        myBall.y += 5;
         break;
       case 'ArrowLeft':
-        this.balls[0].x -= 5;
+        myBall.x -= 5;
         break;
       case 'ArrowRight':
-        this.balls[0].x += 5;
+        myBall.x += 5;
         break;
       default:
         break;
@@ -27,8 +27,11 @@ export class GameService {
     this.balls.push(new Ball(socketId));
   }
 
-  removeBall() {
-    // TODO: Remove My Ball
-    this.balls.pop();
+  removeBall(socketId: string) {
+    this.balls = this.balls.filter((ball) => ball.id !== socketId);
   }
+  private getMyBall(socketId: string) {
+    return this.balls.find((ball) => ball.id === socketId);
+  }
+
 }

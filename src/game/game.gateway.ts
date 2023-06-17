@@ -5,6 +5,7 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { GameService } from './game.service';
@@ -19,14 +20,15 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer()
   server: Server;
+  fps = 1000 / 60;
 
   setIntervalId = setInterval(() => {
     this.server.emit('balls', this.gameService.balls);
-  }, 1000 / 60);
+  }, this.fps);
 
   @SubscribeMessage('game')
-  handleGame(@MessageBody() keyEvent: KeyEvent) {
-    this.gameService.moveBall(keyEvent.keyCode);
+  handleGame(@MessageBody() keyEvent: KeyEvent, @ConnectedSocket() client: Socket) {
+    this.gameService.moveBall(keyEvent.keyCode, client.id);
   }
 
   async handleConnection(client: Socket) {
@@ -34,8 +36,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log('Connection', this.gameService.balls);
   }
 
-  async handleDisconnect() {
-    this.gameService.removeBall();
+  async handleDisconnect(client: Socket) {
+    this.gameService.removeBall(client.id);
     console.log('Disconnection', this.gameService.balls);
   }
 }

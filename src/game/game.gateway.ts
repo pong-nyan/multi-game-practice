@@ -21,13 +21,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
 
   setIntervalId = setInterval(() => {
-    this.server.emit('game', this.gameService.balls);
+    this.server.emit('balls', this.gameService.balls);
   }, 1000 / 60);
 
   @SubscribeMessage('game')
   handleGame(@MessageBody() keyEvent: KeyEvent) {
     this.gameService.moveBall(keyEvent.keyCode);
-    // this.server.emit('game', this.gameService.balls);
   }
 
   async handleConnection(client: Socket) {

@@ -3,10 +3,7 @@ import { Ball } from './objects/game.objects';
 
 @Injectable()
 export class GameService {
-  balls: Ball[];
-  constructor(balls: Ball[] = []) {
-    this.balls = balls;
-  }
+  balls: Ball[] = [];
   moveBall(keyCode: string, socketId: string) {
     const myBall = this.getMyBall(socketId);
     switch (keyCode) {

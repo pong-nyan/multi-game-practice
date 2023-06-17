@@ -3,10 +3,12 @@ import { Ball } from './objects/game.objects';
 
 @Injectable()
 export class GameService {
-  balls: Ball[] = [];
+  balls: Ball[];
+  constructor(balls: Ball[] = []) {
+    this.balls = balls;
+  }
   moveBall(keyCode: string, socketId: string) {
     const myBall = this.getMyBall(socketId);
-    const prev: { x: number, y: number } = { x: myBall.x, y: myBall.y };
     switch (keyCode) {
       case 'ArrowUp':
         myBall.y -= 5;
@@ -23,11 +25,8 @@ export class GameService {
       default:
         break;
     }
-    if (this.isCollision(myBall)) {
-      myBall.x = prev.x;
-      myBall.y = prev.y;
-    }
   }
+
   addBall(socketId: string) {
     this.balls.push(new Ball(socketId));
   }
@@ -38,6 +37,9 @@ export class GameService {
   private getMyBall(socketId: string) {
     return this.balls.find((ball) => ball.id === socketId);
   }
+
+  //TODO: detect window collision
+  //modify moveBall to check for collision
   private isCollision(ball: Ball) {
     const collision = this.balls.find(
       (b) =>

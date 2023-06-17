@@ -13,16 +13,21 @@ import { KeyEvent } from './objects/game.interface';
 @WebSocketGateway({
   cors: { origin: '*' },
 })
+
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly gameService: GameService) {}
+  constructor(private readonly gameService: GameService) { }
 
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('game') 
+  setIntervalId = setInterval(() => {
+    this.server.emit('game', this.gameService.balls);
+  }, 1000 / 60);
+
+  @SubscribeMessage('game')
   handleGame(@MessageBody() keyEvent: KeyEvent) {
     this.gameService.moveBall(keyEvent.keyCode);
-    this.server.emit('game', this.gameService.balls);
+    // this.server.emit('game', this.gameService.balls);
   }
 
   async handleConnection(client: Socket) {

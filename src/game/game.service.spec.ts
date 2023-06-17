@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { GameService } from './game.service';
 
-
+// TODO: sepeat test for each function
 describe('GameService', () => {
   let service: GameService;
 
